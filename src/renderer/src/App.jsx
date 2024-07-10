@@ -1,35 +1,44 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import React, { useEffect, useState } from 'react'
 
 function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+  const [users, setUsers] = useState([])
+  const [newUserName, setNewUserName] = useState('')
+
+  useEffect(() => {
+    // Obtener usuarios al cargar el componente
+    window.api.getUsers().then(setUsers)
+  }, [])
+
+  const handleAddUser = () => {
+    if (newUserName) {
+      window.api
+        .createUser(newUserName)
+        .then(() => {
+          // Actualizar la lista de usuarios después de crear uno nuevo
+          return window.api.getUsers()
+        })
+        .then(setUsers)
+      setNewUserName('')
+    }
+  }
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <div>
+      <h1>Usuarios</h1>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+      <input
+        type="text"
+        value={newUserName}
+        onChange={(e) => setNewUserName(e.target.value)}
+        placeholder="Nombre del usuario"
+      />
+      <button onClick={handleAddUser}>Agregar Usuario</button>
+    </div>
   )
 }
 
 export default App
-
