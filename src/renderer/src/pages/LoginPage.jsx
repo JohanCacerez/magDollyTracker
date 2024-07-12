@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const response = await window.api.loginUser(username, password)
       if (response.success) {
-        console.log('Login successful:', response.user)
         setError('')
-        // Redirigir al usuario a la página principal u otra lógica de éxito
+        localStorage.setItem('token', response.token)
+        console.log('Login successful:', response.users)
+        navigate('/')
       } else {
         setError(response.message)
       }
