@@ -1,17 +1,19 @@
 // src/renderer/src/components/SelectionMenu.js
 import React from 'react'
 import { FaBox, FaDolly } from 'react-icons/fa'
+import { useUser } from '../context/UserContext'
 
 const Menu = ({ onSelect }) => {
   const token = localStorage.getItem('token')
+  const { user } = useUser()
+  const isAdmin = user && user.range === 'admin'
   let isAuth = false
 
   if (token) {
     try {
       isAuth = true
     } catch (error) {
-      console.error()
-      r('Token invalido', error)
+      console.error()('Token invalido', error)
       localStorage.removeItem('token')
     }
   }
@@ -41,6 +43,17 @@ const Menu = ({ onSelect }) => {
         >
           <FaDolly className="w-8 h-8 mr-2" />
           <span className="text-lg">Dollie Tracker</span>
+        </button>
+        <button
+          className={`flex items-center px-6 py-4 rounded shadow-lg transition duration-300 ${
+            isAdmin
+              ? 'bg-yellow-500 text-white hover:bg-yellow-700'
+              : 'bg-gray-400 text-gray-700 cursor-not-allowed'
+          }`}
+          onClick={() => isAdmin && onSelect('Admin Panel')}
+          disabled={!isAuth || !isAdmin} // Deshabilitar si no hay token válido o el usuario no es administrador
+        >
+          <span className="text-lg">Admin Panel</span>
         </button>
       </div>
     </div>

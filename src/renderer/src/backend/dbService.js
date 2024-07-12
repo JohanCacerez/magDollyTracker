@@ -4,6 +4,7 @@ import { app } from 'electron'
 
 const dbPath = join(app.getPath('userData'), 'database.sqlite')
 const db = Database(dbPath)
+console.log(dbPath)
 
 export const initializeDatabase = () => {
   db.exec('PRAGMA foreign_keys = ON')
