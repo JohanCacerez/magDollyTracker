@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
 
 function Notification({ message, onClose }) {
   return (
@@ -14,6 +15,7 @@ function Notification({ message, onClose }) {
 
 function Navbar() {
   const navigate = useNavigate()
+  const { updateUser } = useUser()
   const [isAuth, setIsAuth] = useState(false)
   const [showLoginMenu, setShowLoginMenu] = useState(false)
   const [username, setUsername] = useState('')
@@ -39,6 +41,7 @@ function Navbar() {
         setShowLoginMenu(false)
         setUsername('')
         setPassword('')
+        updateUser(response.user)
         navigate(`/user/${response.user.id}`)
       } else {
         showNotification(response.message)
@@ -52,6 +55,7 @@ function Navbar() {
   const handleClickLogout = () => {
     localStorage.removeItem('token')
     setIsAuth(false)
+    updateUser('')
     navigate('/')
   }
 
