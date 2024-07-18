@@ -2,12 +2,19 @@
 import React from 'react'
 import { FaBox, FaDolly } from 'react-icons/fa'
 import { useUser } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
 
 const Menu = ({ onSelect }) => {
   const token = localStorage.getItem('token')
   const { user } = useUser()
   const isAdmin = user && user.range === 'admin'
   let isAuth = false
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    console.log('controlpane')
+    navigate('/controlpane')
+  }
 
   if (token) {
     try {
@@ -50,7 +57,7 @@ const Menu = ({ onSelect }) => {
               ? 'bg-yellow-500 text-white hover:bg-yellow-700'
               : 'bg-gray-400 text-gray-700 cursor-not-allowed'
           }`}
-          onClick={() => isAdmin && onSelect('Admin Panel')}
+          onClick={() => isAdmin && handleClick()}
           disabled={!isAuth || !isAdmin} // Deshabilitar si no hay token válido o el usuario no es administrador
         >
           <span className="text-lg">Admin Panel</span>
