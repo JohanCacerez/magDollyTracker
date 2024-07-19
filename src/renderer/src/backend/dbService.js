@@ -63,6 +63,12 @@ export const initializeDatabase = () => {
       FOREIGN KEY (id_user) REFERENCES users(id)
     )
   `)
+
+  db.exec(`
+    INSERT INTO users (id, name, password, range) 
+    SELECT 1, 'admin', 'admin', 'admin'
+    WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = 1)
+  `)
 }
 
 export const queryDatabase = (query, params) => {
