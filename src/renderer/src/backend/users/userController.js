@@ -8,8 +8,8 @@ export const registerUserIPCListeners = () => {
     return getAllUsers()
   })
 
-  ipcMain.handle('create-user', async (_, name, password) => {
-    return createUser(name, password)
+  ipcMain.handle('create-user', async (_, id, name, password, range) => {
+    return createUser(id, name, password, range)
   })
 
   ipcMain.handle('login-user', async (_, name, password) => {

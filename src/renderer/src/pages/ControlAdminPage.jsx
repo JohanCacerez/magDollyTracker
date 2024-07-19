@@ -2,9 +2,31 @@ import React, { useState } from 'react'
 
 function ControlAdminPage() {
   const [openSection, setOpenSection] = useState(null)
+  const [id, setId] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [range, setRange] = useState('user')
 
   const toggleSection = (section) => {
     setOpenSection(openSection === section ? null : section)
+  }
+
+  const handleCreateUser = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await window.api.createUser(id, username, password, range)
+      if (response.success) {
+        setId('')
+        setUsername('')
+        setPassword('')
+        setRange('operador')
+        console.log('Usuario creado exitosamente')
+      } else {
+        console.log(response.message)
+      }
+    } catch (error) {
+      console.log('Error:', error.message)
+    }
   }
 
   return (
@@ -20,13 +42,15 @@ function ControlAdminPage() {
         </button>
         {openSection === 'addUser' && (
           <div className="mt-4">
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleCreateUser}>
               <div>
                 <label className="block text-sm font-medium text-gray-700">ID</label>
                 <input
                   type="text"
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                   placeholder="Ingrese ID"
+                  value={id}
+                  onChange={(e) => setId(e.target.value)}
                 />
               </div>
               <div>
@@ -35,6 +59,8 @@ function ControlAdminPage() {
                   type="text"
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                   placeholder="Ingrese Nombre"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div>
@@ -43,17 +69,24 @@ function ControlAdminPage() {
                   type="password"
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                   placeholder="Ingrese Contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Rango</label>
-                <select className="mt-1 p-2 block w-full border border-gray-300 rounded-md">
-                  <option value="user">Usuario</option>
+                <select
+                  className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+                  value={range}
+                  onChange={(e) => setRange(e.target.value)}
+                >
+                  <option value="operador">Operador</option>
+                  <option value="tecnico">Técnico</option>
                   <option value="admin">Administrador</option>
                 </select>
               </div>
               <button
-                type="button"
+                type="submit"
                 className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
               >
                 Agregar Usuario
