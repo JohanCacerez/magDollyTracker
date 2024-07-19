@@ -75,3 +75,8 @@ export const insertIntoDatabase = (query, params) => {
   const result = stmt.run(params)
   return { id: result.lastInsertRowid }
 }
+
+export const runQuery = (query, params) => {
+  const stmt = db.prepare(query)
+  return stmt.run(params)
+}

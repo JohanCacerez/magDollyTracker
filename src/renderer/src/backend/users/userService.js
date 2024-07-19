@@ -1,9 +1,7 @@
 // backend/users/userService.js
 
-import { queryDatabase, insertIntoDatabase } from '../dbService'
+import { queryDatabase, insertIntoDatabase, runQuery } from '../dbService'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-
 const secretKey = 'clave_secreta'
 
 export const getAllUsers = async () => {
@@ -16,10 +14,9 @@ export const createUser = async (id, name, password, range) => {
     if (existUserId.length > 0) {
       return { success: false, message: 'El usuario con este ID ya existe' }
     }
-    const hashedPassword = await bcrypt.hash(password, 10)
 
     const query = 'INSERT INTO users (id, name, password, range) VALUES (?, ?, ?, ?)'
-    await insertIntoDatabase(query, [id, name, hashedPassword, range])
+    await insertIntoDatabase(query, [id, name, password, range])
     return { success: true }
   } catch (error) {
     console.error('Error creating user:', error)
@@ -40,6 +37,29 @@ export const loginUser = async (name, password) => {
     return { success: true, token, user }
   } else {
     return { success: false, message: 'Nombre de usuario o contraseña incorrectos' }
+  }
+}
+
+export const SearchUserById = async (id) => {
+  const user = await queryDatabase('SELECT * FROM users WHERE id = ?', [id])
+  if (user.length > 0) {
+    return { success: true }
+  } else {
+    return { success: false }
+  }
+}
+
+export const UserDelete = async (id) => {
+  try {
+    const result = await runQuery('DELETE FROM users WHERE id = ?', [id])
+    if (result.changes > 0) {
+      return { success: true, message: 'usuario eliminado' }
+    } else {
+      return { success: false, message: 'Usuario no encontrado' }
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error)
+    return { success: false, message: 'Error eliminando el usuario' }
   }
 }
 
