@@ -83,7 +83,7 @@ export const initializeDatabase = () => {
   `)
 
   db.exec(
-    `INSERT INTO magazines (id, size) SELECT 1, '1', '190' WHERE NOT EXISTS (SELECT 1 FROM magazines WHERE id = 1)`
+    `INSERT INTO magazines (id, size) SELECT 1, 190 WHERE NOT EXISTS (SELECT 1 FROM magazines WHERE id = 1)`
   )
 }
 
