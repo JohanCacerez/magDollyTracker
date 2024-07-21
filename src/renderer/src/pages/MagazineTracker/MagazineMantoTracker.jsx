@@ -203,7 +203,7 @@ function MagazineMantoTracker() {
               <div className="border-t border-gray-200 my-4"></div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  ¿Falta algún tornillo?
+                  ¿Falta algún tornillo / perno?
                 </label>
                 <div className="mt-2 space-y-2">
                   <label className="inline-flex items-center">
