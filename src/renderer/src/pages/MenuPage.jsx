@@ -16,6 +16,10 @@ const Menu = ({ onSelect }) => {
     navigate('/controlpane')
   }
 
+  const handleClickMagazine = () => {
+    navigate('/magazinetracker')
+  }
+
   if (token) {
     try {
       isAuth = true
@@ -33,7 +37,7 @@ const Menu = ({ onSelect }) => {
               ? 'bg-blue-500 text-white hover:bg-blue-700'
               : 'bg-gray-400 text-gray-700 cursor-not-allowed'
           }`}
-          onClick={() => onSelect('Magazine Tracker')}
+          onClick={() => handleClickMagazine()}
           disabled={!isAuth} // Deshabilitar si no hay token válido
         >
           <FaBox className="w-8 h-8 mr-2" />

@@ -15,7 +15,7 @@ function Notification({ message, onClose }) {
 
 function Navbar() {
   const navigate = useNavigate()
-  const { updateUser } = useUser()
+  const { user, updateUser } = useUser()
   const [isAuth, setIsAuth] = useState(false)
   const [showLoginMenu, setShowLoginMenu] = useState(false)
   const [username, setUsername] = useState('')
@@ -55,7 +55,7 @@ function Navbar() {
   const handleClickLogout = () => {
     localStorage.removeItem('token')
     setIsAuth(false)
-    updateUser('')
+    updateUser(null)
     navigate('/')
   }
 
@@ -85,14 +85,18 @@ function Navbar() {
             MagDollyTracker
           </button>
         </div>
+
         <div>
           {isAuth ? (
-            <button
-              className="text-white bg-red-500 hover:bg-red-700 px-3 py-2 rounded"
-              onClick={handleClickLogout}
-            >
-              Cerrar sesión
-            </button>
+            <div className="flex items-center">
+              <h2 className="text-white mr-4">{user?.name}</h2>
+              <button
+                className="text-white bg-red-500 hover:bg-red-700 px-3 py-2 rounded"
+                onClick={handleClickLogout}
+              >
+                Cerrar sesión
+              </button>
+            </div>
           ) : (
             <button
               className="text-white bg-blue-500 hover:bg-blue-700 px-3 py-2 rounded"

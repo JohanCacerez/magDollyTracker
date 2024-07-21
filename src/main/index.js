@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { initializeDatabase } from '../renderer/src/backend/dbService'
 import { registerUserIPCListeners } from '../renderer/src/backend/users/userController'
+import { magazineIPCListeners } from '../renderer/src/backend/magazines/magazinesController'
 
 initializeDatabase()
 
@@ -59,6 +60,7 @@ app.whenReady().then(() => {
 
   createWindow()
   registerUserIPCListeners()
+  magazineIPCListeners()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

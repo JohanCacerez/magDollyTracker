@@ -3,12 +3,26 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
+  //users
   getUsers: () => ipcRenderer.invoke('get-users'),
   createUser: (id, name, password, range) =>
     ipcRenderer.invoke('create-user', id, name, password, range),
   loginUser: (name, password) => ipcRenderer.invoke('login-user', name, password),
   searchUserById: (id) => ipcRenderer.invoke('search-user-by-id', id),
-  userDelete: (id) => ipcRenderer.invoke('user-delete', id)
+  userDelete: (id) => ipcRenderer.invoke('user-delete', id),
+  //magzines
+  searchMagazineById: (id) => ipcRenderer.invoke('search-magazine-by-id', id),
+  updateMagazine: (id, damage, observation_damage, screws_count, comment, status, idUser) =>
+    ipcRenderer.invoke(
+      'update-magazine',
+      id,
+      damage,
+      observation_damage,
+      screws_count,
+      comment,
+      status,
+      idUser
+    )
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

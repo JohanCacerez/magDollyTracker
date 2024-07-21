@@ -22,19 +22,26 @@ export const initializeDatabase = () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS magazines (
       id INTEGER PRIMARY KEY,
-      name TEXT,
       size TEXT,
       status TEXT,
-      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      damage TEXT,
+      observation_damage TEXT,
+      screws_count INTEGER,
+      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      last_maintenance DATE,
+      next_maintenance DATE,
+      comment TEXT
     )
   `)
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS dollies (
       id INTEGER PRIMARY KEY,
-      name TEXT,
       status TEXT,
-      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      last_maintenance DATE,
+      next_maintenance DATE,
+      comment TEXT
     )
   `)
 
@@ -42,8 +49,12 @@ export const initializeDatabase = () => {
     CREATE TABLE IF NOT EXISTS maintenance_magazines (
       id INTEGER PRIMARY KEY,
       id_magazine INTEGER,
-      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      current_maintenance TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      next_maintenance DATE,
       status TEXT,
+      damage TEXT,
+      observation_damage TEXT,
+      screws_count INTEGER,
       id_user INTEGER,
       comments TEXT,
       FOREIGN KEY (id_magazine) REFERENCES magazines(id),
@@ -56,6 +67,7 @@ export const initializeDatabase = () => {
       id INTEGER PRIMARY KEY,
       id_dollie INTEGER,
       create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      next_maintenance DATE,
       status TEXT,
       id_user INTEGER,
       comments TEXT,
