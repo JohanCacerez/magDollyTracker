@@ -81,6 +81,10 @@ export const initializeDatabase = () => {
     SELECT 1, 'admin', 'admin', 'admin'
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = 1)
   `)
+
+  db.exec(
+    `INSERT INTO magazines (id, size) SELECT 1, '1', '190' WHERE NOT EXISTS (SELECT 1 FROM magazines WHERE id = 1)`
+  )
 }
 
 export const queryDatabase = (query, params) => {
