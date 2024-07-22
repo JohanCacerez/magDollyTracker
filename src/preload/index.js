@@ -22,6 +22,18 @@ const api = {
       comment,
       status,
       idUser
+    ),
+  registerMagazine: (id, size, damaged, observationDamage, screwsCount, comment, status, id_user) =>
+    ipcRenderer.invoke(
+      'register-magazine',
+      id,
+      size,
+      damaged,
+      observationDamage,
+      screwsCount,
+      comment,
+      status,
+      id_user
     )
 }
 

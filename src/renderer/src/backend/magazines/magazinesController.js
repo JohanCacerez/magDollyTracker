@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { maintenanceMagazine, searchMagazineById, updateMagazine } from './magazinesService'
+import { registerMagazine, searchMagazineById, updateMagazine } from './magazinesService'
 
 export const magazineIPCListeners = () => {
   ipcMain.handle('search-magazine-by-id', async (_, id) => {
@@ -9,6 +9,21 @@ export const magazineIPCListeners = () => {
     'update-magazine',
     async (_, id, damage, observation_damage, screws_count, comment, status, idUser) => {
       return updateMagazine(id, damage, observation_damage, screws_count, comment, status, idUser)
+    }
+  )
+  ipcMain.handle(
+    'register-magazine',
+    async (_, id, size, damaged, observationDamage, screwsCount, comment, status, id_user) => {
+      return registerMagazine(
+        id,
+        size,
+        damaged,
+        observationDamage,
+        screwsCount,
+        comment,
+        status,
+        id_user
+      )
     }
   )
 }
