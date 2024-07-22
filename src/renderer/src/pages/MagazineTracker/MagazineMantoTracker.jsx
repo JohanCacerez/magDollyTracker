@@ -72,7 +72,7 @@ function MagazineMantoTracker() {
 
   return (
     <div
-      className={`flex justify-center items-center min-h-screen p-4 bg-gray-100 ${formVisible ? 'animate-fadeIn' : 'animate-fadeOut'}`}
+      className={`flex justify-center items-center  p-4 bg-gray-100 ${formVisible ? 'animate-fadeIn' : 'animate-fadeOut'}`}
     >
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <form onSubmit={handleFormSubmit}>
