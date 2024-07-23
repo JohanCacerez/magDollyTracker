@@ -41,9 +41,10 @@ export const loginUser = async (name, password) => {
 }
 
 export const SearchUserById = async (id) => {
-  const user = await queryDatabase('SELECT * FROM users WHERE id = ?', [id])
+  const user = await queryDatabase('SELECT * FROM users WHERE id = ?', [String(id)])
+  console.log('Resultado de la consulta a la base de datos:', user)
   if (user.length > 0) {
-    return { success: true }
+    return { success: true, user }
   } else {
     return { success: false }
   }

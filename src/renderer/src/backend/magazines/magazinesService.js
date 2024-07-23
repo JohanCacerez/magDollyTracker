@@ -46,7 +46,7 @@ export const updateMagazine = async (
     )
 
     const maintenanceExists = await queryDatabase(
-      'SELECT * FROM maintenance_magazines WHERE id = ?',
+      'SELECT * FROM maintenance_magazines WHERE id_magazine = ?',
       [id]
     )
     if (maintenanceExists.length > 0) {
@@ -107,7 +107,7 @@ export const registerMagazine = async (
     } else {
       //registrar magazine
       await insertIntoDatabase(
-        'INSERT INTO magazines (id, size, status, damage, observation_damage, screws_count, create_at, last_maintenance, next_maintenance, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO magazines (id, size, status, damage, observation_damage, screws_count, create_at, last_maintenance, next_maintenance, user, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           id,
           size,
@@ -118,6 +118,7 @@ export const registerMagazine = async (
           today,
           today,
           nextMaintenance,
+          id_user,
           comment
         ]
       )
@@ -156,4 +157,50 @@ export const registerMagazine = async (
       message: `Ocurrió un error al actualizar los datos del magazine, error: ${error}`
     }
   }
+}
+
+export const getExpiredMagazines = async () => {
+  const now = new Date().toISOString()
+  return await queryDatabase('SELECT * FROM maintenance_magazines WHERE next_maintenance < ?', [
+    now
+  ])
+}
+
+export const getAboutToExpireMagazines = async () => {
+  // Obtén la fecha actual como objeto Date
+  const now = new Date()
+
+  // Obtén la fecha de un mes a partir de ahora
+  const oneMonthFromNow = new Date(now)
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1)
+
+  // Formatea las fechas para la consulta
+  const nowISOString = now.toISOString()
+  const oneMonthFromNowISOString = oneMonthFromNow.toISOString()
+
+  // Realiza la consulta en la base de datos
+  const query = `
+    SELECT * FROM maintenance_magazines
+    WHERE next_maintenance >= ? AND next_maintenance < ?
+  `
+  return await queryDatabase(query, [nowISOString, oneMonthFromNowISOString])
+}
+
+export const getGoodConditionMagazines = async () => {
+  // Obtén la fecha actual como objeto Date
+  const now = new Date()
+
+  // Obtén la fecha de un mes a partir de ahora
+  const oneMonthFromNow = new Date(now)
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1)
+
+  // Formatea las fechas para la consulta
+  const oneMonthFromNowISOString = oneMonthFromNow.toISOString()
+
+  // Realiza la consulta en la base de datos
+  const query = `
+    SELECT * FROM maintenance_magazines
+    WHERE next_maintenance >= ?
+  `
+  return await queryDatabase(query, [oneMonthFromNowISOString])
 }

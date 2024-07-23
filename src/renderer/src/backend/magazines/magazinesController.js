@@ -1,5 +1,12 @@
 import { ipcMain } from 'electron'
-import { registerMagazine, searchMagazineById, updateMagazine } from './magazinesService'
+import {
+  registerMagazine,
+  searchMagazineById,
+  updateMagazine,
+  getExpiredMagazines,
+  getAboutToExpireMagazines,
+  getGoodConditionMagazines
+} from './magazinesService'
 
 export const magazineIPCListeners = () => {
   ipcMain.handle('search-magazine-by-id', async (_, id) => {
@@ -26,4 +33,13 @@ export const magazineIPCListeners = () => {
       )
     }
   )
+  ipcMain.handle('get-expired-magazines', async (_) => {
+    return getExpiredMagazines()
+  })
+  ipcMain.handle('get-about-to-expired-magazines', async (_) => {
+    return getAboutToExpireMagazines()
+  })
+  ipcMain.handle('get-good-magazines', async (_) => {
+    return getGoodConditionMagazines()
+  })
 }

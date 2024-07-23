@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import MagazineMantoTracker from './MagazineTracker/MagazineMantoTracker'
 import MagazineRegister from './MagazineTracker/MagazineRegister'
+import MagazineReview from './MagazineTracker/MagazineReview'
 
 function MagazineTrackerPage() {
   const [selectedOption, setSelectedOption] = useState('review')
@@ -29,7 +30,7 @@ function MagazineTrackerPage() {
         </select>
       </div>
 
-      {selectedOption === 'review' && <div> </div>}
+      {selectedOption === 'review' && <MagazineReview />}
 
       {selectedOption === 'register' && <MagazineRegister />}
 

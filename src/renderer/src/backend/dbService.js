@@ -11,7 +11,7 @@ export const initializeDatabase = () => {
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       name TEXT,
       password TEXT,
       range TEXT,
@@ -30,6 +30,7 @@ export const initializeDatabase = () => {
       create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       last_maintenance DATE,
       next_maintenance DATE,
+      user TEXT,
       comment TEXT
     )
   `)
@@ -81,10 +82,6 @@ export const initializeDatabase = () => {
     SELECT 1, 'admin', 'admin', 'admin'
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = 1)
   `)
-
-  db.exec(
-    `INSERT INTO magazines (id, size) SELECT 1, 190 WHERE NOT EXISTS (SELECT 1 FROM magazines WHERE id = 1)`
-  )
 }
 
 export const queryDatabase = (query, params) => {
