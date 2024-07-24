@@ -32,6 +32,31 @@ const Menu = () => {
     }
   }
 
+  const magazines = []
+  for (let i = 1; i <= 359; i++) {
+    const id = `D-${i.toString().padStart(4, '0')}`
+    magazines.push([
+      id,
+      '2023-06-23', // create_at
+      '2024-06-23', // next_maintenance
+      'desconocido', //status
+      'no', // damage
+      '', // observation_damage
+      0, // screws_count
+      1, // user
+      '' // comment
+    ])
+  }
+
+  const agregarMagazines = async (magazines) => {
+    const response = await window.api.insert(magazines)
+    if (response.status === 'success') {
+      console.log('Datos insertados correctamente.')
+    } else {
+      console.error('Error al insertar datos.')
+    }
+  }
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="flex space-x-4">
@@ -71,6 +96,7 @@ const Menu = () => {
           <span className="text-lg">Admin Panel</span>
         </button>
       </div>
+      <button onClick={() => agregarMagazines(magazines)}> agregar dollies</button>
     </div>
   )
 }

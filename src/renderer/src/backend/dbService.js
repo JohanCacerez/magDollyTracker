@@ -111,7 +111,7 @@ export const runQuery = (query, params) => {
 //pasar a utilidades
 export const insertMany = db.transaction((magazines) => {
   const query = `
-    INSERT INTO maintenance_magazines (id_magazine, current_maintenance, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments)
+    INSERT INTO maintenance_dollies (id_dollie, current_maintenance, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `
   for (const magazine of magazines) {
