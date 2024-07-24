@@ -3,7 +3,7 @@ import { FaBox, FaDolly } from 'react-icons/fa'
 import { useUser } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 
-const Menu = ({ onSelect }) => {
+const Menu = () => {
   const token = localStorage.getItem('token')
   const { user } = useUser()
   const isAdmin = user && user.range === 'admin'
@@ -17,6 +17,10 @@ const Menu = ({ onSelect }) => {
 
   const handleClickMagazine = () => {
     navigate('/magazinetracker')
+  }
+
+  const handleClickDollie = () => {
+    navigate('/dollietracker')
   }
 
   if (token) {
@@ -49,7 +53,7 @@ const Menu = ({ onSelect }) => {
               ? 'bg-green-500 text-white hover:bg-green-700'
               : 'bg-gray-400 text-gray-700 cursor-not-allowed'
           }`}
-          onClick={() => onSelect('Dollie Tracker')}
+          onClick={() => handleClickDollie()}
           disabled={!isAuth}
         >
           <FaDolly className="w-8 h-8 mr-2" />

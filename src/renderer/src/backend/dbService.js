@@ -39,9 +39,13 @@ export const initializeDatabase = () => {
     CREATE TABLE IF NOT EXISTS dollies (
       id TEXT PRIMARY KEY,
       status TEXT,
+      damage TEXT,
+      observation_damage TEXT,
+      screws_count INTEGER,
       create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       last_maintenance DATE,
       next_maintenance DATE,
+      user TEXT,
       comment TEXT
     )
   `)
@@ -67,9 +71,12 @@ export const initializeDatabase = () => {
     CREATE TABLE IF NOT EXISTS maintenance_dollies (
       id INTEGER PRIMARY KEY,
       id_dollie TEXT,
-      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      current_maintenance TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       next_maintenance DATE,
       status TEXT,
+      damage TEXT,
+      observation_damage TEXT,
+      screws_count INTEGER,
       id_user INTEGER,
       comments TEXT,
       FOREIGN KEY (id_dollie) REFERENCES dollies(id),

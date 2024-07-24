@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { initializeDatabase } from '../renderer/src/backend/dbService'
 import { registerUserIPCListeners } from '../renderer/src/backend/users/userController'
 import { magazineIPCListeners } from '../renderer/src/backend/magazines/magazinesController'
+import { DollieIPCListeners } from '../renderer/src/backend/dollies/dolliesController'
 
 initializeDatabase()
 
@@ -61,6 +62,7 @@ app.whenReady().then(() => {
   createWindow()
   registerUserIPCListeners()
   magazineIPCListeners()
+  DollieIPCListeners()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

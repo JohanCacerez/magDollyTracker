@@ -39,6 +39,19 @@ const api = {
   getAboutToExpireMagazines: () => ipcRenderer.invoke('get-about-to-expired-magazines'),
   getGoodMagazines: () => ipcRenderer.invoke('get-good-magazines'),
 
+  //dollies
+  registerDollie: (id, damaged, observationDamage, screwsCount, comment, status, id_user) =>
+    ipcRenderer.invoke(
+      'register-dollie',
+      id,
+      damaged,
+      observationDamage,
+      screwsCount,
+      comment,
+      status,
+      id_user
+    ),
+
   //utilidades
   insert: (magazines) => ipcRenderer.invoke('insert', magazines)
 }

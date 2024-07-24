@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import { UserProvider } from './context/UserContext'
 import ControlAdminPage from './pages/ControlAdminPage'
 import MagazineTrackerPage from './pages/MagazineTrackerPage'
+import DollieTrackerPage from './pages/DollieTrackerPage'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/user/:id" element={<MenuPage />} />
           <Route path="/controlpane" element={<ControlAdminPage />} />
           <Route path="/magazinetracker" element={<MagazineTrackerPage />} />
+          <Route path="/dollietracker" element={<DollieTrackerPage />} />
         </Routes>
       </UserProvider>
     </HashRouter>
