@@ -1,4 +1,4 @@
-import { queryDatabase, insertIntoDatabase, runQuery } from '../dbService'
+import { queryDatabase, insertIntoDatabase } from '../dbService'
 
 export const searchMagazineById = async (id) => {
   const magazines = await queryDatabase('SELECT * FROM magazines WHERE id = ?', [id])
@@ -20,6 +20,16 @@ export const updateMagazine = async (
   id_user
 ) => {
   try {
+    // Comprobar que todos los datos estén llenos, excepto observation_damage y comment que pueden estar vacíos
+    const requiredFields = [id, damage, screws_count, status, id_user]
+    const allRequiredFieldsFilled = requiredFields.every(
+      (field) => field !== '' && field !== null && field !== undefined
+    )
+
+    if (!allRequiredFieldsFilled) {
+      return { success: false, message: 'Faltan datos' }
+    }
+
     // Obtener la fecha de hoy
     const today = new Date().toISOString().split('T')[0] // Formato 'YYYY-MM-DD'
 
@@ -31,17 +41,17 @@ export const updateMagazine = async (
     // Ejecutar la consulta de actualización
     await insertIntoDatabase(
       `
-          UPDATE magazines 
-          SET 
-            damage = ?, 
-            observation_damage = ?, 
-            screws_count = ?, 
-            comment = ?, 
-            status = ?, 
-            last_maintenance = ?, 
-            next_maintenance = ?
-          WHERE id = ?
-        `,
+        UPDATE magazines 
+        SET 
+          damage = ?, 
+          observation_damage = ?, 
+          screws_count = ?, 
+          comment = ?, 
+          status = ?, 
+          last_maintenance = ?, 
+          next_maintenance = ?
+        WHERE id = ?
+      `,
       [damage, observation_damage, screws_count, comment, status, today, nextMaintenance, id]
     )
 
@@ -49,8 +59,8 @@ export const updateMagazine = async (
       'SELECT * FROM maintenance_magazines WHERE id_magazine = ?',
       [id]
     )
+
     if (maintenanceExists.length > 0) {
-      console.log(id_user)
       await insertIntoDatabase(
         'UPDATE maintenance_magazines SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ? WHERE id_magazine = ?',
         [
@@ -67,11 +77,12 @@ export const updateMagazine = async (
       )
     } else {
       await insertIntoDatabase(
-        'INSERT INTO maintenance_magazines  (id_magazine, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO maintenance_magazines (id_magazine, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
         [id, nextMaintenance, status, damage, observation_damage, screws_count, id_user, comment]
       )
     }
-    return { success: true, message: 'mantenimiento registardo' }
+
+    return { success: true, message: 'Mantenimiento registrado' }
   } catch (error) {
     return {
       success: false,
@@ -91,6 +102,16 @@ export const registerMagazine = async (
   id_user
 ) => {
   try {
+    // Comprobar que todos los datos estén llenos, excepto observation_damage y comment que pueden estar vacíos
+    const requiredFields = [id, damage, screws_count, status, id_user]
+    const allRequiredFieldsFilled = requiredFields.every(
+      (field) => field !== '' && field !== null && field !== undefined
+    )
+
+    if (!allRequiredFieldsFilled) {
+      return { success: false, message: 'Faltan datos' }
+    }
+
     // Obtener la fecha de hoy
     const today = new Date().toISOString().split('T')[0] // Formato 'YYYY-MM-DD'
 
@@ -200,7 +221,7 @@ export const getGoodConditionMagazines = async () => {
   // Realiza la consulta en la base de datos
   const query = `
     SELECT * FROM maintenance_magazines
-    WHERE next_maintenance >= ?
+    WHERE next_maintenance >= ? AND status IN ('good', 'repaired', 'desconocido') 
   `
   return await queryDatabase(query, [oneMonthFromNowISOString])
 }

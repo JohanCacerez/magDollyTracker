@@ -21,7 +21,7 @@ export const initializeDatabase = () => {
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS magazines (
-      id INTEGER PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       size TEXT,
       status TEXT,
       damage TEXT,
@@ -37,7 +37,7 @@ export const initializeDatabase = () => {
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS dollies (
-      id INTEGER PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       status TEXT,
       create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       last_maintenance DATE,
@@ -49,7 +49,7 @@ export const initializeDatabase = () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS maintenance_magazines (
       id INTEGER PRIMARY KEY,
-      id_magazine INTEGER,
+      id_magazine TEXT,
       current_maintenance TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       next_maintenance DATE,
       status TEXT,
@@ -66,7 +66,7 @@ export const initializeDatabase = () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS maintenance_dollies (
       id INTEGER PRIMARY KEY,
-      id_dollie INTEGER,
+      id_dollie TEXT,
       create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       next_maintenance DATE,
       status TEXT,
@@ -99,3 +99,16 @@ export const runQuery = (query, params) => {
   const stmt = db.prepare(query)
   return stmt.run(params)
 }
+
+// Comienza una transacción
+//pasar a utilidades
+export const insertMany = db.transaction((magazines) => {
+  const query = `
+    INSERT INTO maintenance_magazines (id_magazine, current_maintenance, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `
+  for (const magazine of magazines) {
+    insertIntoDatabase(query, magazine)
+  }
+  return { status: 'success' }
+})

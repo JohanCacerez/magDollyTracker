@@ -16,7 +16,6 @@ const MagazineReview = () => {
         const goodConditionResponse = await window.api.getGoodMagazines()
         setGoodConditionMagazines(goodConditionResponse)
 
-        // Obtener los nombres de los usuarios
         const userIds = new Set([
           ...expiredResponse.map((m) => m.id_user),
           ...aboutToExpireResponse.map((m) => m.id_user),
@@ -46,7 +45,7 @@ const MagazineReview = () => {
 
   return (
     <div className="flex flex-col space-y-8">
-      <div className="table-container">
+      <div className="table-container h-64 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Magazines con Mantenimiento Vencido</h2>
         <table className="table-auto w-full border border-red-500 bg-red-100">
           <thead>
@@ -86,7 +85,7 @@ const MagazineReview = () => {
         </table>
       </div>
 
-      <div className="table-container">
+      <div className="table-container h-64 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Magazines por Vencer</h2>
         <table className="table-auto w-full border border-yellow-500 bg-yellow-100">
           <thead>
@@ -126,7 +125,7 @@ const MagazineReview = () => {
         </table>
       </div>
 
-      <div className="table-container">
+      <div className="table-container h-64 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Magazines en Buen Estado</h2>
         <table className="table-auto w-full border border-green-500 bg-green-100">
           <thead>

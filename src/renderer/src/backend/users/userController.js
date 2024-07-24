@@ -2,6 +2,7 @@
 
 import { ipcMain } from 'electron'
 import { getAllUsers, createUser, loginUser, SearchUserById, UserDelete } from './userService'
+import { insertMany } from '../dbService'
 
 export const registerUserIPCListeners = () => {
   ipcMain.handle('get-users', async () => {
@@ -25,6 +26,10 @@ export const registerUserIPCListeners = () => {
 
   ipcMain.handle('user-delete', async (_, id) => {
     return UserDelete(id)
+  })
+  //pasar a utilidades
+  ipcMain.handle('insert', async (_, magazines) => {
+    return insertMany(magazines)
   })
 
   // Otras funciones IPC relacionadas con usuarios pueden ir aquí

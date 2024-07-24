@@ -37,7 +37,10 @@ const api = {
     ),
   getExpiredMagazines: () => ipcRenderer.invoke('get-expired-magazines'),
   getAboutToExpireMagazines: () => ipcRenderer.invoke('get-about-to-expired-magazines'),
-  getGoodMagazines: () => ipcRenderer.invoke('get-good-magazines')
+  getGoodMagazines: () => ipcRenderer.invoke('get-good-magazines'),
+
+  //utilidades
+  insert: (magazines) => ipcRenderer.invoke('insert', magazines)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
