@@ -51,6 +51,21 @@ const api = {
       status,
       id_user
     ),
+  updateDollie: (id, damage, observation_damage, screws_count, comment, status, id_user) =>
+    ipcRenderer.invoke(
+      'update-dollie',
+      id,
+      damage,
+      observation_damage,
+      screws_count,
+      comment,
+      status,
+      id_user
+    ),
+  searchDollyById: (id) => ipcRenderer.invoke('search-dolly-by-id', id),
+  getExpiredDollies: () => ipcRenderer.invoke('get-expired-dollies'),
+  getAboutToExpiredDollies: () => ipcRenderer.invoke('get-about-expired-dollies'),
+  getGoodConditionDollies: () => ipcRenderer.invoke('get-good-dollies'),
 
   //utilidades
   insert: (magazines) => ipcRenderer.invoke('insert', magazines)

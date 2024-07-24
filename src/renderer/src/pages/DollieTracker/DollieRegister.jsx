@@ -18,7 +18,7 @@ function DollieRegister() {
     e.preventDefault()
     try {
       const screwsCountNumber = parseInt(screwsCount, 10) || 0
-      const dollieIdM = `M-${dollieId}`
+      const dollieIdM = `D-${dollieId}`
       const response = await window.api.registerDollie(
         dollieIdM,
         isDamaged ? 'yes' : 'no',

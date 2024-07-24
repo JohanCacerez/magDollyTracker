@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import DollieRegister from './DollieTracker/DollieRegister'
+import DollieMantoTracker from './DollieTracker/DollieMantoTracker'
+import DollieReview from './DollieTracker/DollieReview'
 
 function DollieTrackerPage() {
   const [selectedOption, setSelectedOption] = useState('review')
@@ -28,11 +30,11 @@ function DollieTrackerPage() {
         </select>
       </div>
 
-      {selectedOption === 'review' && <div> </div>}
+      {selectedOption === 'review' && <DollieReview />}
 
       {selectedOption === 'register' && <DollieRegister />}
 
-      {selectedOption === 'maintenance' && <div> </div>}
+      {selectedOption === 'maintenance' && <DollieMantoTracker />}
 
       {selectedOption === 'export' && <div>{/* Lógica para extraer base de datos a Excel */}</div>}
     </div>
