@@ -62,7 +62,7 @@ export const updateMagazine = async (
 
     if (maintenanceExists.length > 0) {
       await insertIntoDatabase(
-        'UPDATE maintenance_magazines SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ? WHERE id_magazine = ?',
+        'UPDATE maintenance_magazines SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ? audited = ? WHERE id_magazine = ?',
         [
           today,
           nextMaintenance,
@@ -72,13 +72,14 @@ export const updateMagazine = async (
           screws_count,
           id_user,
           comment,
+          0,
           id
         ]
       )
     } else {
       await insertIntoDatabase(
-        'INSERT INTO maintenance_magazines (id_magazine, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [id, nextMaintenance, status, damage, observation_damage, screws_count, id_user, comment]
+        'INSERT INTO maintenance_magazines (id_magazine, next_maintenance, status, damage, observation_damage, screws_count, id_user, comments, audited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [id, nextMaintenance, status, damage, observation_damage, screws_count, id_user, comment, 0]
       )
     }
 
@@ -149,7 +150,6 @@ export const registerMagazine = async (
         [id]
       )
       if (maintenanceExists.length > 0) {
-        console.log(id_user)
         await insertIntoDatabase(
           'UPDATE maintenance_magazines SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ? WHERE id_magazine = ?',
           [
@@ -207,6 +207,25 @@ export const getAboutToExpireMagazines = async () => {
   return await queryDatabase(query, [nowISOString, oneMonthFromNowISOString])
 }
 
+export const getAuditedMagazines = async () => {
+  // Obtén la fecha actual como objeto Date
+  const now = new Date()
+
+  // Obtén la fecha de un mes a partir de ahora
+  const oneMonthFromNow = new Date(now)
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1)
+
+  // Formatea las fechas para la consulta
+  const oneMonthFromNowISOString = oneMonthFromNow.toISOString()
+
+  // Realiza la consulta en la base de datos
+  const query = `
+    SELECT * FROM maintenance_magazines
+    WHERE next_maintenance >= ? AND status IN ('good', 'repaired', 'desconocido')  AND audited = 0
+  `
+  return await queryDatabase(query, [oneMonthFromNowISOString])
+}
+
 export const getGoodConditionMagazines = async () => {
   // Obtén la fecha actual como objeto Date
   const now = new Date()
@@ -225,3 +244,5 @@ export const getGoodConditionMagazines = async () => {
   `
   return await queryDatabase(query, [oneMonthFromNowISOString])
 }
+
+export const auditerCheck = async () => {}

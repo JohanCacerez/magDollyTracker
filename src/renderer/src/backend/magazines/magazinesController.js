@@ -5,7 +5,8 @@ import {
   updateMagazine,
   getExpiredMagazines,
   getAboutToExpireMagazines,
-  getGoodConditionMagazines
+  getGoodConditionMagazines,
+  getAuditedMagazines
 } from './magazinesService'
 
 export const magazineIPCListeners = () => {
@@ -41,5 +42,8 @@ export const magazineIPCListeners = () => {
   })
   ipcMain.handle('get-good-magazines', async (_) => {
     return getGoodConditionMagazines()
+  })
+  ipcMain.handle('get-audited-magazines', async (_) => {
+    return getAuditedMagazines()
   })
 }

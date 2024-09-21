@@ -96,7 +96,6 @@ const Menu = () => {
           <span className="text-lg">Admin Panel</span>
         </button>
       </div>
-      <button onClick={() => agregarMagazines(magazines)}> agregar dollies</button>
     </div>
   )
 }

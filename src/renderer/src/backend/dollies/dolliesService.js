@@ -56,7 +56,6 @@ export const registerDollie = async (
         [id]
       )
       if (maintenanceExists.length > 0) {
-        console.log(id_user)
         await insertIntoDatabase(
           'UPDATE maintenance_dollies SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ? WHERE id_magazine = ?',
           [

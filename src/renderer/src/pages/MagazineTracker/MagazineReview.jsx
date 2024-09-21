@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import { useUser } from '../../context/UserContext'
 
 const MagazineReview = () => {
   const [expiredMagazines, setExpiredMagazines] = useState([])
   const [aboutToExpireMagazines, setAboutToExpireMagazines] = useState([])
   const [goodConditionMagazines, setGoodConditionMagazines] = useState([])
+  const [auidtedMagazines, setAuditedMagazines] = useState([])
   const [userNames, setUserNames] = useState({})
+  const { user } = useUser()
+
+  const isAuditor = user && (user.range === 'auditor' || user.range === 'admin')
 
   useEffect(() => {
     const fetchMagazines = async () => {
@@ -15,17 +20,19 @@ const MagazineReview = () => {
         setAboutToExpireMagazines(aboutToExpireResponse)
         const goodConditionResponse = await window.api.getGoodMagazines()
         setGoodConditionMagazines(goodConditionResponse)
+        const auditedResponse = await window.api.getAuditedMagazines()
+        setAuditedMagazines(auditedResponse)
 
         const userIds = new Set([
           ...expiredResponse.map((m) => m.id_user),
           ...aboutToExpireResponse.map((m) => m.id_user),
-          ...goodConditionResponse.map((m) => m.id_user)
+          ...goodConditionResponse.map((m) => m.id_user),
+          ...auditedResponse.map((m) => m.id_user)
         ])
 
         const userNamesTemp = {}
         for (const id of userIds) {
           const response = await window.api.searchUserById(id)
-          console.log(`Response for user ID ${id}:`, response)
           if (response.success) {
             userNamesTemp[id] = response.user[0].name
           } else {
@@ -85,8 +92,10 @@ const MagazineReview = () => {
         </table>
       </div>
 
+      <div className="border-t border-gray-200 my-4"></div>
+
       <div className="table-container h-64 overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">Magazines por Vencer</h2>
+        <h2 className="text-xl font-bold mb-4">Magazines por vencer</h2>
         <table className="table-auto w-full border border-yellow-500 bg-yellow-100">
           <thead>
             <tr className="bg-yellow-200">
@@ -124,6 +133,71 @@ const MagazineReview = () => {
           </tbody>
         </table>
       </div>
+
+      <div className="border-t border-gray-200 my-4"></div>
+
+      <div className="table-container h-64 overflow-y-auto">
+        <h2 className="text-xl font-bold mb-4">Magazines por revisar</h2>
+        <table className="table-auto w-full border border-orange-500 bg-orange-100">
+          <thead>
+            <tr className="bg-orange-200">
+              <th className="w-1/12 p-2 border border-orange-400">ID</th>
+              <th className="w-1/12 p-2 border border-orange-400">Fecha de Mantenimiento</th>
+              <th className="w-1/12 p-2 border border-orange-400">Fecha de sig. mantenimiento</th>
+              <th className="w-1/12 p-2 border border-orange-400">Estado</th>
+              <th className="w-1/12 p-2 border border-orange-400">Dañado</th>
+              <th className="w-2/12 p-2 border border-orange-400">Comentario del daño</th>
+              <th className="w-1/12 p-2 border border-orange-400">Tornillos faltantes</th>
+              <th className="w-1/12 p-2 border border-orange-400">Usuario</th>
+              <th className="w-2/12 p-2 border border-orange-400">Comentario</th>
+              <th className="w-2/12 p-2 border border-orange-400">Auditado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {auidtedMagazines.map((magazine) => (
+              <tr key={magazine.id} className="bg-orange-50 hover:bg-orange-200">
+                <td className="p-2 border border-orange-400">{magazine.id_magazine}</td>
+                <td className="p-2 border border-orange-400">
+                  {formatDateString(magazine.current_maintenance)}
+                </td>
+                <td className="p-2 border border-orange-400">
+                  {formatDateString(magazine.next_maintenance)}
+                </td>
+                <td className="p-2 border border-orange-400">{magazine.status}</td>
+                <td className="p-2 border border-orange-400">{magazine.damaged ? 'Sí' : 'No'}</td>
+                <td className="p-2 border border-orange-400">{magazine.damageComment}</td>
+                <td className="p-2 border border-orange-400">{magazine.missingScrews}</td>
+                <td className="p-2 border border-orange-400">
+                  {userNames[magazine.id_user] || magazine.id_user}
+                </td>
+                <td className="p-2 border border-orange-400">{magazine.comment}</td>
+                <td className="p-2 border border-orange-400">
+                  <input
+                    type="checkbox"
+                    disabled={!isAuditor} // Disabled if user is not an Auditor
+                    className="form-checkbox text-orange-500"
+                    onChange={() => handleAuditChange(magazine.id_magazine)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-end mt-4">
+        <button
+          className={`font-bold py-2 px-4 rounded ${
+            isAuditor
+              ? 'bg-orange-500 hover:bg-orange-700 text-white'
+              : 'bg-gray-500 text-gray-200 cursor-not-allowed'
+          }`}
+          disabled={!isAuditor}
+        >
+          Enviar Revisión
+        </button>
+      </div>
+
+      <div className="border-t border-gray-200 my-4"></div>
 
       <div className="table-container h-64 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Magazines en Buen Estado</h2>

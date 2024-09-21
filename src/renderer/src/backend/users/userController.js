@@ -18,9 +18,7 @@ export const registerUserIPCListeners = () => {
   })
 
   ipcMain.handle('search-user-by-id', async (_, id) => {
-    console.log('IPC handler: search-user-by-id invocado con id:', id)
     const result = await SearchUserById(id)
-    console.log('Resultado de SearchUserById:', result)
     return result
   })
 

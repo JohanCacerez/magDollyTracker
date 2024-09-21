@@ -84,7 +84,7 @@ function ControlAdminPage() {
                   onChange={(e) => setRange(e.target.value)}
                 >
                   <option value="operador">Operador</option>
-                  <option value="tecnico">Técnico</option>
+                  <option value="auditor">Auditor</option>
                   <option value="admin">Administrador</option>
                 </select>
               </div>

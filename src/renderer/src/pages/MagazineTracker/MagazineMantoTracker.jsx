@@ -24,7 +24,7 @@ function MagazineMantoTracker() {
     try {
       const screwsCountNumber = parseInt(screwsCount, 10) || 0
       const response = await window.api.updateMagazine(
-        parseInt(magazineId, 10),
+        magazineId,
         isDamaged ? 'yes' : 'no',
         observationDmg || '',
         screwsCountNumber,
