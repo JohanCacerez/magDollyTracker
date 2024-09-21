@@ -62,7 +62,7 @@ export const updateMagazine = async (
 
     if (maintenanceExists.length > 0) {
       await insertIntoDatabase(
-        'UPDATE maintenance_magazines SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ? audited = ? WHERE id_magazine = ?',
+        'UPDATE maintenance_magazines SET current_maintenance = ?, next_maintenance = ?, status = ?, damage = ?, observation_damage = ?, screws_count = ?, id_user = ?, comments = ?, audited = ? WHERE id_magazine = ?',
         [
           today,
           nextMaintenance,
@@ -240,9 +240,27 @@ export const getGoodConditionMagazines = async () => {
   // Realiza la consulta en la base de datos
   const query = `
     SELECT * FROM maintenance_magazines
-    WHERE next_maintenance >= ? AND status IN ('good', 'repaired', 'desconocido') 
+    WHERE next_maintenance >= ? AND audited = 1 AND status IN ('good', 'repaired', 'desconocido') 
   `
   return await queryDatabase(query, [oneMonthFromNowISOString])
 }
 
-export const auditerCheck = async () => {}
+export const markMagazineAsAudited = async (id) => {
+  try {
+    const result = await insertIntoDatabase(
+      'UPDATE maintenance_magazines SET audited = ? WHERE id_magazine = ?',
+      [1, id]
+    )
+
+    if (result.affectedRows > 0) {
+      return { success: true, message: 'Magazine marcado como auditado' }
+    } else {
+      return { success: false, message: 'No se encontró el magazine' }
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: `Ocurrió un error al marcar el magazine como auditado, error: ${error}`
+    }
+  }
+}

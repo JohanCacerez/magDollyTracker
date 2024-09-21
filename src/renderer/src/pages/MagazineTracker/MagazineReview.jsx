@@ -6,6 +6,7 @@ const MagazineReview = () => {
   const [aboutToExpireMagazines, setAboutToExpireMagazines] = useState([])
   const [goodConditionMagazines, setGoodConditionMagazines] = useState([])
   const [auidtedMagazines, setAuditedMagazines] = useState([])
+  const [selectedMagazines, setSelectedMagazines] = useState([]) // Estado para los magazines seleccionados
   const [userNames, setUserNames] = useState({})
   const { user } = useUser()
 
@@ -49,6 +50,48 @@ const MagazineReview = () => {
   }, [])
 
   const formatDateString = (dateString) => new Date(dateString).toLocaleDateString()
+
+  // Manejar cambios en los checkboxes
+  const handleCheckboxChange = (id_magazine) => {
+    setSelectedMagazines(
+      (prevSelected) =>
+        prevSelected.includes(id_magazine)
+          ? prevSelected.filter((id) => id !== id_magazine) // Si ya está seleccionado, lo deselecciona
+          : [...prevSelected, id_magazine] // Si no está seleccionado, lo agrega
+    )
+  }
+
+  const handleMarkAsAudited = async (id) => {
+    const result = await window.api.markMagazineAsAudited(id)
+    if (result.success) {
+      console.log('correcto auditado')
+    } else {
+      console.log('auditado incorrecto')
+    }
+  }
+
+  // Función para actualizar las tablas
+  const updateAuditor = async () => {
+    // Itera sobre los magazines seleccionados y llama a la función para marcar cada uno como auditado
+    for (const id of selectedMagazines) {
+      await handleMarkAsAudited(id)
+    }
+
+    // Actualiza las tablas después de marcar los magazines como auditados
+    const updatedAuditedMagazines = auidtedMagazines.filter(
+      (magazine) => !selectedMagazines.includes(magazine.id_magazine)
+    )
+    const magazinesToMove = auidtedMagazines.filter((magazine) =>
+      selectedMagazines.includes(magazine.id_magazine)
+    )
+
+    // Actualizar las tablas
+    setAuditedMagazines(updatedAuditedMagazines)
+    setGoodConditionMagazines([...goodConditionMagazines, ...magazinesToMove])
+
+    // Limpiar la selección
+    setSelectedMagazines([])
+  }
 
   return (
     <div className="flex flex-col space-y-8">
@@ -136,6 +179,7 @@ const MagazineReview = () => {
 
       <div className="border-t border-gray-200 my-4"></div>
 
+      {/* Tabla de magazines por revisar */}
       <div className="table-container h-64 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Magazines por revisar</h2>
         <table className="table-auto w-full border border-orange-500 bg-orange-100">
@@ -176,7 +220,8 @@ const MagazineReview = () => {
                     type="checkbox"
                     disabled={!isAuditor} // Disabled if user is not an Auditor
                     className="form-checkbox text-orange-500"
-                    onChange={() => handleAuditChange(magazine.id_magazine)}
+                    onChange={() => handleCheckboxChange(magazine.id_magazine)}
+                    checked={selectedMagazines.includes(magazine.id_magazine)}
                   />
                 </td>
               </tr>
@@ -184,6 +229,7 @@ const MagazineReview = () => {
           </tbody>
         </table>
       </div>
+
       <div className="flex justify-end mt-4">
         <button
           className={`font-bold py-2 px-4 rounded ${
@@ -192,13 +238,13 @@ const MagazineReview = () => {
               : 'bg-gray-500 text-gray-200 cursor-not-allowed'
           }`}
           disabled={!isAuditor}
+          onClick={updateAuditor}
         >
           Enviar Revisión
         </button>
       </div>
 
-      <div className="border-t border-gray-200 my-4"></div>
-
+      {/* Tabla de magazines en buen estado */}
       <div className="table-container h-64 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Magazines en Buen Estado</h2>
         <table className="table-auto w-full border border-green-500 bg-green-100">

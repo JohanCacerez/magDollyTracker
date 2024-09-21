@@ -62,6 +62,7 @@ export const initializeDatabase = () => {
       screws_count INTEGER,
       id_user INTEGER,
       comments TEXT,
+      audited INT,
       FOREIGN KEY (id_magazine) REFERENCES magazines(id),
       FOREIGN KEY (id_user) REFERENCES users(id)
     )
